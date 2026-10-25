@@ -1,0 +1,92 @@
+@use "../../base/mixin";
+@use "../../base/variable";
+
+.vs-footer {
+  position: relative;
+  z-index: 1;
+  background: var(--title-color);
+
+  .element1,
+  .element2 {
+    position: absolute;
+    bottom: 0;
+    z-index: -1;
+  }
+
+  .element1 {
+    left: 0;
+  }
+
+  .element2 {
+    right: 0;
+  }
+}
+
+.footer-stext {
+  p {
+    font-size: 18px;
+    color: #a7afcc;
+    margin-bottom: 40px;
+  }
+
+  .vs-btn {
+    background-color: var(--theme-color);
+    color: var(--white-color);
+    font-size: 16px;
+    padding: 17px 45px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-transform: capitalize;
+
+    &:hover {
+      background-color: var(--theme-color2);
+      color: var(--white-color);
+    }
+  }
+}
+
+.copyright-wrap {
+  text-align: center;
+  padding: 42px 0;
+  position: relative;
+  z-index: 2;
+}
+
+.copyright-text {
+  margin: 0;
+  font-weight: 500;
+  color: variable.$smoke-color;
+  font-size: 15px;
+  line-height: 24px;
+  text-transform: capitalize;
+
+  a {
+    color: variable.$smoke-color;
+    font-weight: 700;
+
+    &:hover {
+      color: variable.$secondary-color;
+      text-decoration: underline;
+    }
+  }
+}
+
+@include mixin.md {
+  .copyright-text {
+    font-size: 14px;
+  }
+}
+
+.copyright {
+  background-color: #141414;
+
+  a {
+    color: var(--white-color);
+    font-weight: 600;
+
+    &:hover {
+      color: var(--theme-color);
+    }
+  }
+}

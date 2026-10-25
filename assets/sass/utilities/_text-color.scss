@@ -1,0 +1,15 @@
+@use "../base/variable";
+
+.text-inherit {
+  color: inherit;
+  &:hover {
+    color: variable.$secondary-color;
+  }
+}
+
+a.text-theme,
+.text-reset {
+  &:hover {
+    text-decoration: underline;
+  }
+}
