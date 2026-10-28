@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Debt Reduction Planner</title>
+<style>
+:root{--bg:#f4f7f8;--card:#fff;--ink:#12263a;--mut:#5d7183;--line:#d9e2e8;--acc:#0b6e6e;--acc2:#e0a526;--inp:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1a24;--card:#16252f;--ink:#e6eef3;--mut:#93a8b8;--line:#2a3d4a;--acc:#4fc3b5;--acc2:#f0bf4a;--inp:#0e1a24;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1a24;--card:#16252f;--ink:#e6eef3;--mut:#93a8b8;--line:#2a3d4a;--acc:#4fc3b5;--acc2:#f0bf4a;--inp:#0e1a24;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+main{max-width:1120px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:26px;margin:0 0 2px;letter-spacing:-.3px;text-align:center}h2{font-size:17px;margin:0 0 12px}
+.sub{color:var(--mut);margin:0 0 20px;text-align:center}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px}
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.hero div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.hero b{display:block;font-size:26px;line-height:1.2}.hero span{color:var(--mut);font-size:13px}
+.hero .main{background:var(--acc);border-color:var(--acc);color:#fff}.hero .main span{color:#dff3f1}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hero .main{color:#06201e}:root:not([data-theme="light"]) .hero .main span{color:#0c3b37}}
+.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{padding:6px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}th:first-child,td:first-child{text-align:left}
+th{font-size:13px;color:var(--mut);font-weight:600}
+input,select{font:inherit;color:var(--ink);background:var(--inp);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%;min-width:70px}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+td input{text-align:right}td:first-child input{text-align:left;min-width:130px}
+.row{display:flex;flex-wrap:wrap;gap:14px;align-items:end}.row label{display:flex;flex-direction:column;font-size:13px;color:var(--mut);gap:4px;flex:1;min-width:170px}
+button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;padding:7px 12px;cursor:pointer}
+button.p{background:var(--acc);border-color:var(--acc);color:#fff}button.x{padding:4px 9px;color:var(--mut)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.p{color:#06201e}}
+.note{color:var(--mut);font-size:13px;margin:8px 0 0}.warn{color:#b42318;font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;margin-top:8px}.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+svg{width:100%;height:auto;display:block}
+.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}.cmp div{border:1px solid var(--line);border-radius:8px;padding:10px}.cmp div.best{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}.cmp small{color:var(--mut);display:block}
+details summary{cursor:pointer;font-weight:600}
+html{scroll-behavior:smooth}section[id],.hero[id]{scroll-margin-top:64px}
+nav.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--card)}
+nav.top b{font-size:16px;white-space:nowrap}nav.top div{display:flex;gap:2px;overflow-x:auto}nav.top a{color:var(--mut);text-decoration:none;padding:6px 10px;border-radius:6px;font-size:14px;white-space:nowrap}nav.top a:hover{color:var(--ink);background:var(--bg)}
+.grid2{display:grid;grid-template-columns:1fr;gap:16px}.grid2>section{margin-bottom:0}
+@media(min-width:900px){.grid2{grid-template-columns:3fr 2fr;align-items:start;margin-bottom:16px}}
+footer{text-align:center;color:var(--mut);font-size:13px;padding:0 16px 32px}
+@media(max-width:640px){nav.top b{display:none}main{padding:14px 12px 32px}section{padding:14px}h1{font-size:22px}
+#dt{min-width:0}#dt thead{display:none}#dt tbody tr{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 0;border-bottom:1px solid var(--line);position:relative}
+#dt td{display:block;border:0;padding:0;text-align:left}#dt td::before{content:attr(data-label);display:block;font-size:12px;color:var(--mut);margin-bottom:2px}
+#dt td:first-child{grid-column:1/-1;padding-right:44px}#dt td:last-child{position:absolute;top:10px;right:0}#dt td:last-child::before{content:none}#dt td input{text-align:left}
+.hero b{font-size:22px}}
+</style></head><body><nav class="top"><b>💳 Debt Planner</b><div><a href="#debts">Debts</a><a href="#plan">Plan</a><a href="#hero">Results</a><a href="#payoff">Payoff</a><a href="#compare">Compare</a><a href="#schedule">Schedule</a></div></nav><main>
+<h1>Debt Reduction Planner</h1>
+<p class="sub">Enter your debts, choose how extra money is used, and see when you will be debt free.</p>
+
+<div class="grid2"><section id="debts"><h2>Your debts</h2>
+<div class="wrap"><table id="dt"><thead><tr><th>Creditor</th><th>Balance</th><th>Rate (APR %)</th><th>Min. payment</th><th>Custom order</th><th></th></tr></thead><tbody></tbody></table></div>
+<p style="margin:12px 0 0"><button id="add">Add debt</button> <button id="reset">Load example</button></p>
+<p class="note" id="mn"></p></section>
+
+<section id="plan"><h2>Plan</h2><div class="row">
+<label>Balance date<input type="date" id="sd"></label>
+<label>Total monthly payment<input type="number" id="mp" min="0" step="10"></label>
+<label>Strategy<select id="st">
+<option value="snow">Snowball (lowest balance first)</option><option value="aval">Avalanche (highest interest first)</option>
+<option value="ord">Order entered in table</option><option value="none">No snowball (minimums only)</option>
+<option value="chi">Custom, highest number first</option><option value="clo">Custom, lowest number first</option></select></label></div>
+<p class="note" id="sn"></p></section></div>
+
+<div class="hero" id="hero"></div>
+
+<section id="chartsec"><h2>Balance over time</h2><div id="chart"></div><div class="legend" id="lg"></div></section>
+
+<section id="payoff"><h2>Payoff order</h2><div class="wrap"><table id="pt"><thead><tr><th>Creditor</th><th>Starting balance</th><th>Interest paid</th><th>Months</th><th>Paid off</th></tr></thead><tbody></tbody></table></div></section>
+
+<section id="compare"><h2>Compare strategies</h2><div class="cmp" id="cmp"></div></section>
+
+<section id="schedule"><details><summary>Month-by-month schedule</summary><div class="wrap" style="max-height:420px;overflow:auto;margin-top:10px"><table id="sc"></table></div></details>
+<p class="note">Results are estimates. Interest is calculated monthly (rate ÷ 12) and rounded to the cent. When a debt is paid off, its payment rolls into the next one.</p></section>
+</main><footer>Results are estimates, not financial advice. Your data stays in this browser.</footer>
+<script>
+const EX=[["Card #1",4400,13,50,2],["Auto Loan #1",3200,9.81,30,1],["Auto Loan #2",5000,12,55,3],["Card #2",9000,13.5,110,5],["Student Loan #1",4900,4,25,4]];
+const COL=["#0b6e6e","#e0a526","#c2410c","#4f46e5","#0891b2","#be185d","#65a30d","#7c3aed","#64748b","#b45309","#0d9488","#dc2626"];
+const NAMES={snow:"Snowball",aval:"Avalanche",ord:"Order entered",none:"No snowball",chi:"Custom (high first)",clo:"Custom (low first)"};
+let S={debts:EX.map(d=>({n:d[0],b:d[1],r:d[2],p:d[3],c:d[4]})),mp:500,sd:new Date().toISOString().slice(0,10),st:"snow"};
+try{const v=localStorage.getItem("debtplan");if(v)S=Object.assign(S,JSON.parse(v))}catch(e){}
+const $=id=>document.getElementById(id),$$=n=>Number(n)||0;
+const money=x=>x.toLocaleString("en-US",{style:"currency",currency:"USD"}),m0=x=>x.toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0});
+function addM(d,n){const t=new Date(d+"T00:00:00");const day=t.getDate();t.setDate(1);t.setMonth(t.getMonth()+n);const L=new Date(t.getFullYear(),t.getMonth()+1,0).getDate();t.setDate(Math.min(day,L));return t}
+const fd=d=>d.toLocaleDateString("en-US",{month:"short",year:"numeric"});
+const up=x=>Math.round(x*100+1e-9)/100;
+
+function sim(debts,total,st){
+  const D=debts.map((d,i)=>({i,n:d.n,b:$$(d.b),r:$$(d.r)/100,p:$$(d.p),c:$$(d.c),int:0,paid:null})).filter(d=>d.b>0);
+  const mins=D.reduce((a,d)=>a+d.p,0),avail=st==="none"?mins:Math.max(total,mins);
+  const ord=D.slice();
+  if(st==="snow")ord.sort((a,b)=>a.b-b.b||a.i-b.i);
+  else if(st==="aval")ord.sort((a,b)=>b.r-a.r||a.i-b.i);
+  else if(st==="chi")ord.sort((a,b)=>b.c-a.c||a.i-b.i);
+  else if(st==="clo")ord.sort((a,b)=>a.c-b.c||a.i-b.i);
+  const rows=[],start=D.reduce((a,d)=>a+d.b,0);let m=0,stuck=false,tot=0;
+  rows.push({m:0,bal:D.map(d=>d.b),tot:start,pay:0,int:0});
+  while(D.some(d=>d.b>0.004)&&m<1200){
+    m++;let ti=0,tp=0;
+    ord.forEach(d=>{if(d.b>0){const i=up(d.b*d.r/12);d.b+=i;d.int+=i;ti+=i}});
+    let left=avail;
+    ord.forEach(d=>{if(d.b>0){const x=Math.min(d.p,d.b,left);d.b-=x;left-=x;tp+=x}});
+    ord.forEach(d=>{if(d.b>0&&left>0){const x=Math.min(d.b,left);d.b-=x;left-=x;tp+=x}});
+    ord.forEach(d=>{if(d.b<0.005){d.b=0;if(d.paid===null)d.paid=m}});
+    tot+=ti;rows.push({m,bal:D.map(d=>d.b),tot:D.reduce((a,d)=>a+d.b,0),pay:tp,int:ti});
+    if(m>=1200)stuck=true;
+  }
+  return{D,ord,rows,months:m,interest:tot,stuck,mins,avail,start};
+}
+function save(){try{localStorage.setItem("debtplan",JSON.stringify(S))}catch(e){}}
+function drawTable(){
+  const tb=$("dt").tBodyes||$("dt").querySelector("tbody");tb.innerHTML="";
+  S.debts.forEach((d,i)=>{const tr=document.createElement("tr");
+    tr.innerHTML=`<td data-label="Creditor"><input value="${(d.n||"").replace(/"/g,"&quot;")}" data-k="n" aria-label="Creditor"></td><td data-label="Balance"><input type="number" min="0" step="any" value="${d.b}" data-k="b" aria-label="Balance"></td><td data-label="Rate (APR %)"><input type="number" min="0" step="any" value="${d.r}" data-k="r" aria-label="Rate"></td><td data-label="Min. payment"><input type="number" min="0" step="any" value="${d.p}" data-k="p" aria-label="Minimum payment"></td><td data-label="Custom order"><input type="number" step="any" value="${d.c}" data-k="c" aria-label="Custom order"></td><td><button class="x" aria-label="Remove debt">✕</button></td>`;
+    tr.querySelectorAll("input").forEach(inp=>inp.oninput=()=>{S.debts[i][inp.dataset.k]=inp.dataset.k==="n"?inp.value:inp.value;update()});
+    tr.querySelector("button").onclick=()=>{S.debts.splice(i,1);drawTable();update()};
+    tb.appendChild(tr)});
+}
+function chart(r,D){
+  const W=800,H=280,pl=56,pb=26,pt=8,pr=8,n=r.rows.length-1,max=r.start||1;
+  const X=m=>pl+(n?m/n:0)*(W-pl-pr),Y=v=>pt+(1-v/max)*(H-pt-pb);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Stacked balance by creditor over time">`;
+  for(let k=0;k<=4;k++){const v=max*k/4,y=Y(v);s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${pl-6}" y="${y+4}" font-size="11" text-anchor="end" fill="var(--mut)">${m0(v)}</text>`}
+  const ticks=Math.min(6,n);for(let k=0;k<=ticks;k++){const m=Math.round(n*k/ticks);s+=`<text x="${X(m)}" y="${H-8}" font-size="11" text-anchor="${k==ticks?"end":k?"middle":"start"}" fill="var(--mut)">${fd(addM(S.sd,m))}</text>`}
+  const idx=r.D.map((_,i)=>i),cum=r.rows.map(()=>0);
+  idx.forEach(i=>{const lo=r.rows.map((_,m)=>cum[m]);idx;r.rows.forEach((w,m)=>cum[m]+=w.bal[i]);
+    let p="M"+r.rows.map((_,m)=>X(m)+","+Y(cum[m])).join("L")+"L"+r.rows.map((_,m)=>X(n-m)+","+Y(lo[n-m])).join("L")+"Z";
+    s+=`<path d="${p}" fill="${COL[r.D[i].i%COL.length]}" opacity=".85"/>`});
+  $("chart").innerHTML=s+"</svg>";
+  $("lg").innerHTML=r.D.map(d=>`<span><i style="background:${COL[d.i%COL.length]}"></i>${d.n||"Debt"}</span>`).join("");
+}
+function update(){
+  S.mp=$("mp").value;S.sd=$("sd").value||S.sd;S.st=$("st").value;save();
+  const r=sim(S.debts,$$(S.mp),S.st);
+  $("mn").textContent=`Total debt ${money(r.start)} · minimum payments ${money(r.mins)}/month`;
+  $("sn").innerHTML=$$(S.mp)<r.mins&&S.st!=="none"?`<span class="warn">Your monthly payment is below the minimums, so ${money(r.mins)} is used.</span>`:`Extra “snowball” each month: ${money(S.st==="none"?0:Math.max(0,$$(S.mp)-r.mins))}`;
+  if(!r.D.length){$("hero").innerHTML="";$("chart").innerHTML="<p class='note'>Add a debt with a balance to see your plan.</p>";$("lg").innerHTML="";$("pt").querySelector("tbody").innerHTML="";$("cmp").innerHTML="";$("sc").innerHTML="";return}
+  const base=sim(S.debts,$$(S.mp),"none");
+  const saved=base.stuck?null:base.interest-r.interest;
+  $("hero").innerHTML=r.stuck?`<div class="main" style="grid-column:1/-1"><b>Not paid off</b><span>Payments don’t cover interest. Raise the monthly payment or minimums.</span></div>`:
+   `<div class="main"><b>${fd(addM(S.sd,r.months))}</b><span>Debt-free date</span></div><div><b>${Math.floor(r.months/12)}y ${r.months%12}m</b><span>Time to pay off</span></div><div><b>${money(r.interest)}</b><span>Total interest</span></div>`+(saved!==null&&S.st!=="none"?`<div><b>${money(saved)}</b><span>Interest saved vs. minimums only</span></div>`:"");
+  chart(r,r.D);
+  $("pt").querySelector("tbody").innerHTML=r.ord.map(d=>`<tr><td>${d.n||"Debt"}</td><td>${money(debtB(d))}</td><td>${money(d.int)}</td><td>${d.paid||"—"}</td><td>${d.paid?fd(addM(S.sd,d.paid)):"—"}</td></tr>`).join("");
+  const ks=Object.keys(NAMES),res=ks.map(k=>({k,r:sim(S.debts,$$(S.mp),k)})),ok=res.filter(x=>!x.r.stuck),best=ok.length?Math.min(...ok.map(x=>x.r.interest)):0;
+  $("cmp").innerHTML=res.map(x=>`<div class="${!x.r.stuck&&x.r.interest===best?"best":""}"><b>${NAMES[x.k]}</b>${x.r.stuck?"<small>Never paid off</small>":`<small>${fd(addM(S.sd,x.r.months))} · ${x.r.months} months</small><small>${money(x.r.interest)} interest</small>`}</div>`).join("");
+  $("sc").innerHTML=`<thead><tr><th>#</th><th>Month</th><th>Payment</th><th>Interest</th><th>Balance</th></tr></thead><tbody>`+r.rows.slice(1).map(w=>`<tr><td>${w.m}</td><td>${fd(addM(S.sd,w.m))}</td><td>${money(w.pay)}</td><td>${money(w.int)}</td><td>${money(w.tot)}</td></tr>`).join("")+"</tbody>";
+}
+function debtB(d){return S.debts[d.i]?$$(S.debts[d.i].b):0}
+$("add").onclick=()=>{S.debts.push({n:"",b:0,r:0,p:0,c:S.debts.length+1});drawTable();update()};
+$("reset").onclick=()=>{S.debts=EX.map(d=>({n:d[0],b:d[1],r:d[2],p:d[3],c:d[4]}));S.mp=500;drawTable();$("mp").value=500;update()};
+["mp","sd","st"].forEach(id=>$(id).oninput=update);
+$("mp").value=S.mp;$("sd").value=S.sd;$("st").value=S.st;drawTable();update();
+</script></body></html>
